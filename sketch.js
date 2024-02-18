@@ -1,8 +1,12 @@
-let targetColor;
+// Todo: add history, add better buttons, add reset, add winning msg
+
+let target_color;
 let your_color;
 let buttons = [];
-let buttonColors = ["magenta", "cyan", "yellow", "white", "black"];
-let max_mix_colors = 3;
+let blend = [];
+let button_colors = ["magenta", "cyan", "yellow", "white", "black"];
+let max_mix_colors = 10;
+let precision = 5;
 let solution = [];
 
 function setup() {
@@ -12,15 +16,15 @@ function setup() {
   your_color = color(255);
 
   // Create buttons
-  let buttonWidth = width / buttonColors.length;
-  for (let i = 0; i < buttonColors.length; i++) {
+  let buttonWidth = width / button_colors.length;
+  for (let i = 0; i < button_colors.length; i++) {
     buttons.push(
       new Button(
         i * buttonWidth,
         height - 50,
         buttonWidth,
         50,
-        color(buttonColors[i])
+        color(button_colors[i])
       )
     );
   }
@@ -35,7 +39,7 @@ function draw() {
   rect(0, 0, width, 200);
 
   // Draw target color
-  fill(targetColor);
+  fill(target_color);
   rect(0, height - 250, width, 200);
 
   // Draw buttons
@@ -48,16 +52,10 @@ function mouseClicked() {
   for (let button of buttons) {
     if (button.contains(mouseX, mouseY)) {
       if (your_color != button.color) {
-        your_color = blendColors(your_color, button.color);
-        let distance = dist(
-          red(targetColor),
-          green(targetColor),
-          blue(targetColor),
-          red(your_color),
-          green(your_color),
-          blue(your_color)
-        );
-        if (distance < 20) {
+        blend.push(button.color);
+        your_color = blend_colors(blend);
+        let distance = calc_distance_between_colors(your_color, target_color);
+        if (distance < precision) {
           console.info("Aeeee");
         }
       }
@@ -68,27 +66,41 @@ function mouseClicked() {
 
 function generate_target() {
   let i = 0;
-  let random_new_color = random(buttonColors);
-  let generated_color = color(random_new_color);
-  solution.push(random_new_color);
 
   while (i < max_mix_colors) {
-    random_new_color = random(buttonColors);
+    random_new_color = random(button_colors);
     solution.push(random_new_color);
-    generated_color = blendColors(generated_color, color(random_new_color));
     i++;
   }
-  targetColor = generated_color;
-  console.log(solution);
+  target_color = blend_colors(solution);
+  solution.sort();
+  console.table(solution);
 }
 
-function blendColors(color1, color2) {
-  let r = 0.5 * red(color1) + 0.5 * red(color2);
-  let g = 0.5 * green(color1) + 0.5 * green(color2);
-  let b = 0.5 * blue(color1) + 0.5 * blue(color2);
+function calc_distance_between_colors(color1, color2) {
+  return dist(
+    red(color1),
+    green(color1),
+    blue(color1),
+    red(color2),
+    green(color2),
+    blue(color2)
+  );
+}
+
+function blend_colors(colors) {
+  let r = 0,
+    g = 0,
+    b = 0;
+
+  colors.map((color) => {
+    r += (1 / colors.length) * red(color);
+    g += (1 / colors.length) * green(color);
+    b += (1 / colors.length) * blue(color);
+  });
+
   return color(r, g, b);
 }
-
 class Button {
   constructor(x, y, w, h, color) {
     this.x = x;
