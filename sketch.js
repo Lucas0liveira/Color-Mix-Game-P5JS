@@ -5,63 +5,74 @@ let your_color;
 let buttons = [];
 let blend = [];
 let button_colors = ["magenta", "cyan", "yellow", "white", "black"];
-let max_mix_colors = 10;
-let precision = 5;
+let max_mix_colors = 5;
+let precision = 10;
 let solution = [];
 
 function setup() {
-  createCanvas(400, 450);
+  createCanvas(0, 0);
 
   generate_target();
   your_color = color(255);
 
   // Create buttons
-  let buttonWidth = width / button_colors.length;
-  for (let i = 0; i < button_colors.length; i++) {
-    buttons.push(
-      new Button(
-        i * buttonWidth,
-        height - 50,
-        buttonWidth,
-        50,
-        color(button_colors[i])
-      )
-    );
-  }
-}
+  buttons.push(document.querySelector("#magenta"));
+  buttons.push(document.querySelector("#yellow"));
+  buttons.push(document.querySelector("#cyan"));
+  buttons.push(document.querySelector("#white"));
+  buttons.push(document.querySelector("#black"));
 
-function draw() {
-  background(220);
-  noStroke();
-
-  // Draw top color
-  fill(your_color);
-  rect(0, 0, width, 200);
-
-  // Draw target color
-  fill(target_color);
-  rect(0, height - 250, width, 200);
-
-  // Draw buttons
-  for (let button of buttons) {
-    button.show();
-  }
-}
-
-function mouseClicked() {
-  for (let button of buttons) {
-    if (button.contains(mouseX, mouseY)) {
+  buttons.forEach((button) => {
+    button.style.backgroundColor = button.id;
+    button.style.boxShadow;
+    button.color = color(button.id);
+    button.onclick = () => {
       if (your_color != button.color) {
         blend.push(button.color);
         your_color = blend_colors(blend);
+
         let distance = calc_distance_between_colors(your_color, target_color);
         if (distance < precision) {
-          console.info("Aeeee");
+          win_game();
         }
       }
-      break;
-    }
+    };
+  });
+
+  // Setup reset button
+  const reset = document.querySelector("#reset");
+  reset.onclick = () => reset_game();
+}
+
+function draw() {
+  const target = document.querySelector(".target>.color");
+  const current = document.querySelector(".current>.color");
+  target.style.backgroundColor = target_color;
+  current.style.backgroundColor = your_color;
+}
+
+function win_game() {
+  const msg = document.querySelector("#win-msg");
+  const text = "Nice Job!!!";
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text.charAt(i);
+    const style = "--i:" + (i + 1);
+    let span = document.createElement("span");
+    span.innerHTML = char === " " ? "🧑‍🎨" : char;
+    span.style = style;
+    msg.append(span);
   }
+}
+
+function reset_game() {
+  const win_msg = document.querySelector("#win-msg");
+  win_msg.innerHTML = "";
+
+  generate_target();
+  blend = [];
+  solution = [];
+  your_color = color(255, 255, 255);
 }
 
 function generate_target() {
@@ -100,24 +111,4 @@ function blend_colors(colors) {
   });
 
   return color(r, g, b);
-}
-class Button {
-  constructor(x, y, w, h, color) {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-    this.color = color;
-  }
-
-  show() {
-    fill(this.color);
-    rect(this.x, this.y, this.w, this.h);
-  }
-
-  contains(px, py) {
-    return (
-      px > this.x && px < this.x + this.w && py > this.y && py < this.y + this.h
-    );
-  }
 }
