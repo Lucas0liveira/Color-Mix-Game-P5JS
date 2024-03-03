@@ -1,0 +1,16 @@
+button {
+  all: unset;
+  border-radius: 8px;
+  padding: 12px 14px 14px 12px;
+  box-shadow: 4px 4px #444;
+  border: 2px solid #444;
+
+  &:active {
+    box-shadow: 2px 2px  #444;
+    transform: translate(2px, 2px);
+  }
+
+  &:hover{
+    cursor: pointer;
+  }
+}
