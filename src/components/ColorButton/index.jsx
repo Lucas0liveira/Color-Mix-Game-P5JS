@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
 import "./style.scss";
 
 const ColorButton = ({
@@ -7,7 +7,7 @@ const ColorButton = ({
   onClick = () => null,
 }) => {
   return (
-    <button style={{ backgroundColor: color }} onClick={() => onClick()}>
+    <button style={{ backgroundColor: `#${color}` }} onClick={() => onClick()}>
       {title}
     </button>
   );
