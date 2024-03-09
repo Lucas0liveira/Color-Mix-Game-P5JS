@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import tinycolor from "tinycolor2";
 import ColorButton from "./components/ColorButton";
+import Hits from "./components/Hits";
 import {
   BaseColors,
   getRandomColor,
@@ -119,6 +120,8 @@ function App() {
           />
         </section>
 
+        <Hits difficulty={DIFFICULTY} hits={hits} />
+
         <div className="pallete-buttons">
           {Object.values(BaseColors).map((color, index) => (
             <ColorButton
@@ -130,8 +133,6 @@ function App() {
         </div>
 
         <h3>Lives: {lives}/3</h3>
-        <h3>Hits: {hits.toString()}</h3>
-        <h3>Misses: {misses.toString()}</h3>
       </main>
 
       <footer>
