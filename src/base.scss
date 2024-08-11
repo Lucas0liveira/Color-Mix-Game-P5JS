@@ -1,6 +1,6 @@
-html, body, pre, code, kbd, samp {
-  font-family: "Press Start 2P";
-}
+// html, body, pre, code, kbd, samp {
+//   font-family: "Press Start 2P";
+// }
 
 body {
   margin: 0;
@@ -45,19 +45,21 @@ body {
         height: 50%;
         border-radius: 20%;
         transition: 0.25s;
+        border: 6px solid #000;
       }
 
       .target {
-        top: 10%;
-        left: 10%;
+        top: 8.5%;
+        left: 9%;
       }
           
       .current {
-        bottom: 10%;
-        right: 10%;
+        bottom: 10.5%;
+        right: 10.5%; 
       }
             
       .waiting {
+        border: 6px dashed #000;
         animation: anm linear 1s infinite;
         
         @keyframes anm {
