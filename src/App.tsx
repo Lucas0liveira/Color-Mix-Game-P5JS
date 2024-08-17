@@ -1,38 +1,37 @@
 import { useState, useEffect } from "react";
-import ColorButton from "./components/ColorButton/index";
-import Hits from "./components/Hits/index";
+import { Stage } from "./components/Stage/index";
 import {
 	type Palette,
 	getPalette,
 	getRandomColorFromPalette,
 	blendColors,
-	subtractColorArrays,
 } from "./utils/ColorUtils";
 import "./base.scss";
 
-const DIFFICULTY = 5;
-const STARTING_LIVES = 3
+const DIFFICULTY = 2;
+const STARTING_LIVES = 3;
 
 function App() {
-	const [palette, setPalette] = useState<Palette>(getPalette())
+	const [palette, setPalette] = useState<Palette>(getPalette());
 	const [solution, setSolution] = useState<string[]>([]);
-	const [target_color, setTargetColor] = useState("");
-	const [mix_color, setMixColor] = useState("");
+	const [currentColor, setCurrentColor] = useState("");
+	const [targetColor, setTargetColor] = useState("");
+	const [difficulty, setDifficulty] = useState(DIFFICULTY);
 	const [hits, setHits] = useState<string[]>([]);
 	const [misses, setMisses] = useState<string[]>([]);
 	const [lives, setLives] = useState(STARTING_LIVES);
 
+	const completed = hits.length === difficulty;
+
 	useEffect(() => {
-		generateSolution()
+		generateSolution();
 	}, []);
 
-	function generateSolution() {
-		if (solution && solution.length) return;
-
+	function generateSolution(newDifficulty: number = difficulty) {
 		let i = 0;
 		const new_solution: string[] = [];
 
-		while (i < DIFFICULTY) {
+		while (i < newDifficulty) {
 			const random_color = getRandomColorFromPalette(palette);
 			new_solution.push(random_color);
 			i++;
@@ -44,39 +43,28 @@ function App() {
 		setTargetColor(target);
 	}
 
-	function handleAddColor(color: string) {
-		const remaining = subtractColorArrays(solution, hits);
-
-		if (remaining.includes(color)) {
-			setHits((hits) => [...hits, color]);
-			setMixColor(() => blendColors([...hits, color]));
-		} else {
-			setMisses((misses) => [...misses, color]);
-			setLives((lives) => lives - 1);
-		}
-	}
-
 	function checkVictory() {
-		if (!solution) return;
-		const completed = hits.length === 5;
 		const correct = solution.every((s) => hits.includes(s));
 		const alive = lives > 0;
 
 		if (completed && correct && alive) {
-			winGame();
+			nextStage();
 		}
 	}
 
 	function checkDefeat() {
-		if (lives === 0) loseGame();
+		if (lives === 0) {
+			loseGame();
+		}
 	}
 
-	function winGame() {
-		setTimeout(() => {
-			alert("Acertou!");
-			resetGame();
-		}, 1000);
-	}
+	useEffect(() => {
+		checkVictory();
+	}, [completed]);
+
+	useEffect(() => {
+		checkDefeat();
+	}, [lives]);
 
 	function loseGame() {
 		setTimeout(() => {
@@ -85,12 +73,30 @@ function App() {
 		}, 1000);
 	}
 
+	function nextStage() {
+		setTimeout(() => {
+			const newDifficulty = difficulty + 1;
+			setCurrentColor("");
+			setHits([]);
+			setMisses([]);
+			setPalette(getPalette());
+			generateSolution(newDifficulty);
+			setDifficulty(newDifficulty);
+		}, 1000);
+	}
+
+	function handleMiss(color: string) {
+		setMisses((misses) => [...misses, color]);
+		setLives((lives) => lives - 1);
+	}
+
+	function handleHit(color: string) {
+		setHits((hits) => [...hits, color]);
+	}
+
 	function resetGame() {
 		window.location.reload();
 	}
-
-	useEffect(() => checkVictory(), [hits]);
-	useEffect(() => checkDefeat(), [misses]);
 
 	return (
 		<div className="container">
@@ -98,35 +104,19 @@ function App() {
 				<h2>Palletle</h2>
 			</header>
 
-			<main>
-				<h1 className="nes-title">Match the color</h1>
-				<section className="colors">
-					<div
-						className="color target"
-						style={{ backgroundColor: `#${target_color}` }}
-					/>
-					<div
-						className={`color current ${
-							mix_color ? "" : "waiting"
-						}`}
-						style={{ backgroundColor: `#${mix_color}` }}
-					/>
-				</section>
-
-				<Hits difficulty={DIFFICULTY} hits={hits} />
-
-				<div className="pallete-buttons">
-					{Object.values(palette).map((color, index) => (
-						<ColorButton
-							key={index}
-							color={color}
-							onClick={() => handleAddColor(color)}
-						/>
-					))}
-				</div>
-
-				<h3>Lives: {lives}/3</h3>
-			</main>
+			<Stage
+				currentColor={currentColor}
+				targetColor={targetColor}
+				solution={solution}
+				palette={palette}
+				lives={lives}
+				difficulty={difficulty}
+				onChangeCurrentColor={setCurrentColor}
+				hits={hits}
+				misses={misses}
+				onMiss={handleMiss}
+				onHit={handleHit}
+			/>
 
 			<footer>
 				<p>Footer Content Goes Here</p>

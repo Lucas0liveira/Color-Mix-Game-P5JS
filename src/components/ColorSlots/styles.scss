@@ -1,0 +1,44 @@
+.colors {
+	position: relative;
+	width: 80%;
+	padding-bottom: 80%;
+	margin: auto;
+
+	.color {
+		position: absolute;
+		width: 50%;
+		height: 50%;
+		border-radius: 20%;
+		transition: 0.25s;
+		border: 6px solid #000;
+	}
+
+	.target {
+		top: 8.5%;
+		left: 9%;
+	}
+
+	.current {
+		bottom: 10.5%;
+		right: 10.5%;
+	}
+
+	.waiting {
+		border: 6px dashed #000;
+		background-color: #fff;
+
+		// animation: anm linear 1s infinite;
+
+		// @keyframes anm {
+		// 	0% {
+		// 		background-color: #fff;
+		// 	}
+		// 	50% {
+		// 		background-color: #ffffff;
+		// 	}
+		// 	100% {
+		// 		background-color: #ddd;
+		// 	}
+		// }
+	}
+}

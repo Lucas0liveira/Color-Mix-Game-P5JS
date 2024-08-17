@@ -1,12 +1,12 @@
-import "./style.scss";
+import "./styles.scss";
 
 type Props = {
-	title?: string,
-	color: string,
-	onClick: () => void
-}
+	title?: string;
+	color: string;
+	onClick: () => void;
+};
 
-const ColorButton = (props: Props) => {
+export function ColorButton(props: Props) {
 	return (
 		<button
 			style={{ backgroundColor: `#${props.color}` }}
@@ -15,6 +15,4 @@ const ColorButton = (props: Props) => {
 			{props.title}
 		</button>
 	);
-};
-
-export default ColorButton;
+}

@@ -1,14 +1,16 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
-import "./style.scss";
+import "./styles.scss";
 
 type Props = {
-	difficulty: number,
-	hits: string[]
-}
+	difficulty: number;
+	hits: string[];
+};
 
-const Hits = (props: Props) => {
-	const [slots, setSlots] = useState<{hit: boolean, color: string}[]>([]);
+export function Hits(props: Props) {
+	const [slots, setSlots] = useState<{ hit: boolean; color: string }[]>(
+		[]
+	);
 
 	function calcSlots() {
 		const new_slots = Array(props.difficulty);
@@ -57,6 +59,4 @@ const Hits = (props: Props) => {
 				})}
 		</section>
 	);
-};
-
-export default Hits;
+}
