@@ -27,12 +27,16 @@ function App() {
 		generateSolution();
 	}, []);
 
-	function generateSolution(newDifficulty: number = difficulty) {
+	function generateSolution(
+		newDifficulty: number = difficulty,
+		newPalette: Palette = palette
+	) {
 		let i = 0;
 		const new_solution: string[] = [];
 
 		while (i < newDifficulty) {
-			const random_color = getRandomColorFromPalette(palette);
+			const random_color =
+				getRandomColorFromPalette(newPalette);
 			new_solution.push(random_color);
 			i++;
 		}
@@ -76,13 +80,14 @@ function App() {
 	function nextStage() {
 		setTimeout(() => {
 			const newDifficulty = difficulty + 1;
+			const newPalette = getPalette();
 			setCurrentColor("");
 			setHits([]);
 			setMisses([]);
-			setPalette(getPalette());
-			generateSolution(newDifficulty);
+			setPalette(newPalette);
+			generateSolution(newDifficulty, newPalette);
 			setDifficulty(newDifficulty);
-		}, 1000);
+		}, 1500);
 	}
 
 	function handleMiss(color: string) {

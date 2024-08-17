@@ -25,20 +25,18 @@
 
 	.waiting {
 		border: 6px dashed #000;
-		background-color: #fff;
+		animation: anm linear 1s infinite;
 
-		// animation: anm linear 1s infinite;
-
-		// @keyframes anm {
-		// 	0% {
-		// 		background-color: #fff;
-		// 	}
-		// 	50% {
-		// 		background-color: #ffffff;
-		// 	}
-		// 	100% {
-		// 		background-color: #ddd;
-		// 	}
-		// }
+		@keyframes anm {
+			0% {
+				background-color: #fff;
+			}
+			50% {
+				background-color: #ffffff;
+			}
+			100% {
+				background-color: #ddd;
+			}
+		}
 	}
 }
