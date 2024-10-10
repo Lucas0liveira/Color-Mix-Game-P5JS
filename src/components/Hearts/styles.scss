@@ -1,0 +1,24 @@
+@keyframes pop {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.2;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes psychedelic {
+    from {
+        filter: hue-rotate(0deg);
+    }
+    to {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.heart-icon {
+    animation: pop 0.4s cubic-bezier(0.92, 0.01, 0, 1.02) !important;
+}
